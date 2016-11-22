@@ -1,17 +1,17 @@
 import pygame
 import random
 
-# If we want to use sprites we create a class that inherits from the Sprite class.
-# Each class has an associated image and a rectangle.
 
 # -----------Variables-----------------
 time = 0
-speed = 2
+speed = 1
 score = 0
+spawnrate = 200
+Invulnerablecounter = 0
 life = 3
 player_speed = 6
-asteroid_speed = 1
 Invulnerable = False
+Stop = False
 WHITE = (255, 255, 255)
 DARK_GREY = (50, 50, 50)
 
@@ -66,9 +66,9 @@ class Background:
         y1 = -h
 
     def scroll(self):
-        global y1, y, h, background, screen
-        y1 += 5
-        y += 5
+        global y1, y, h, background, screen, speed
+        y1 += speed
+        y += speed
         screen.blit(background, (x, y))
         screen.blit(background, (x1, y1))
         if y > h:
@@ -103,6 +103,7 @@ class Spawn:
 
             asteroid_list.add(asteroid)
             all_sprites_list.add(asteroid)
+
 
 
 class Uprades:
@@ -141,6 +142,27 @@ class Uprades:
         shot3.rect.y = player.rect.y - 15
         missile_list.add(shot3)
         all_sprites_list.add(shot3)
+
+class Game:
+    def End(self):
+        global Stop
+        print("You Lost")
+        missile_list.empty()
+        asteroid_list.empty()
+        all_sprites_list.empty()
+        Stop = True
+    def Hit(self):
+        global Invulnerablecounter, Invulnerable
+        if time % 3 == 0:
+            all_sprites_list.remove(player)
+        else:
+            if Invulnerablecounter == 70:
+                Invulnerable = False
+                all_sprites_list.add(player)
+            else:
+                Invulnerablecounter += 1
+                all_sprites_list.add(player)
+
 
 
 # ---------------------------------------------
@@ -183,6 +205,7 @@ Dualshot = False
 Tripleshot = False
 
 # Loop until the user clicks the close button.
+game = Game()
 done = False
 
 # Used to manage how fast the screen updates
@@ -193,18 +216,18 @@ clock = pygame.time.Clock()
 # A new missile is created and gets it's initial position in the "middle" of the player.
 # Then this missile is added to the missile sprite-group and also to the all_sprites group.
 while not done:
-    time += 1
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                if Dualshot:
-                    upgrade.dualShot()
-                elif Tripleshot:
-                    upgrade.tripleShot()
-                else:
-                    upgrade.basic()
+                if not Stop:
+                    if Dualshot:
+                        upgrade.dualShot()
+                    elif Tripleshot:
+                        upgrade.tripleShot()
+                    else:
+                        upgrade.basic()
             if event.key == pygame.K_b:
                 spawner.asteroids()
             if event.key == pygame.K_d:
@@ -216,6 +239,10 @@ while not done:
                     Dualshot = False
                 else:
                     Tripleshot = True
+            if event.key == pygame.K_s:
+                speed += 1
+
+
     key = pygame.key.get_pressed()
     if key[pygame.K_LEFT]:
         if player.rect.x < 5:
@@ -234,12 +261,19 @@ while not done:
             player.rect.y = 350
         player.rect.y += player_speed
 
-    if time % speed == 0:
+    time += 1
+    if Invulnerable:
+        game.Hit()
+
+    if not Stop:
         bg.scroll()
 
-    if time % 10 == 0:
-        score += 1
-        bg.scoreBoard()
+    if not Stop:
+        if time % 10 == 0:
+            score += 1
+            bg.scoreBoard()
+        if time % spawnrate == 0:
+            spawner.asteroids()
 
     if pygame.sprite.groupcollide(missile_list, asteroid_list, True, True):
         score += 10
@@ -247,10 +281,14 @@ while not done:
     if pygame.sprite.spritecollide(player, asteroid_list, False):
         if not Invulnerable:
             life -= 1
-            print('Collided')
             bg.lifeBoard()
-            Invulnerable = True
-            all_sprites_list.remove(player)
+            if life == 0:
+                game.End()
+            else:
+                print('Collided')
+                Invulnerable = True
+                Invulnerablecounter = 0
+
 
     # Missiles move at a constant speed up the screen, towards the enemy
     for shot in missile_list:
@@ -261,7 +299,7 @@ while not done:
 
     # All the enemies move down the screen at a constant speed
     for comic in asteroid_list:
-        comic.rect.y += asteroid_speed
+        comic.rect.y += speed + 1
         if comic.rect.y == 400:
             asteroid_list.remove(comic)
             all_sprites_list.remove(comic)

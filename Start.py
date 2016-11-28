@@ -7,6 +7,7 @@ time = 0
 speed = 1
 score = 0
 spawnrate = 200
+enemy_spawnrate = 100
 Invulnerablecounter = 0
 life = 3
 player_speed = 6
@@ -26,6 +27,7 @@ player_imagelight = pygame.image.load('images/spaceship2.png')
 life_image = pygame.transform.scale(player_image, (20, 20))
 asteroid_image = pygame.image.load('images/asteroid.png')
 missile_image = pygame.image.load('images/missile.png')
+enemy_image = pygame.image.load('images/spaceship1.png')
 
 
 # -------------------------------------
@@ -49,6 +51,21 @@ class Missile(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = missile_image
+        self.rect = self.image.get_rect()
+
+class Enemy(pygame.sprite.Sprite):
+    xpos = 0                                # defines the x spawn position
+    ypos = 0                                # defines the y spaw position
+    xtarget = 0                             # defines the x target position(the position the enemy is moving to)
+    ytarget = 0                             # defines the y target position
+                        # defines how many moves it will take to get to the target
+    fireRate = random.randrange(500,750)    # defines the space between fireing, lower number = more rapid fire
+    moveSpeed = random.randrange(5)         # defines how many pixles the enemy moves per update
+    onTarget = False                        # defines if the enemy is on target
+
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = enemy_image
         self.rect = self.image.get_rect()
 
 
@@ -103,6 +120,45 @@ class Spawn:
 
             asteroid_list.add(asteroid)
             all_sprites_list.add(asteroid)
+
+    def enemys(self):
+        #defines the enemy
+        enemy = Enemy()
+
+        #defines the enemy position
+        enemy.rect.x = random.randrange(550)
+        enemy.rect.y = random.randrange(100)
+
+        def findTarget(self): #defines the enemy target
+            enemy.xtarget = random.randrange(550)
+            enemy.ytarget = random.randrange(300)
+
+
+        if enemy.onTarget == True:
+            findTarget()
+            enemy.onTarget = False
+        
+        enemy_list.add(enemy)
+        all_sprites_list.add(enemy)
+        def move(self):
+            distX = enemy.xtarget - enemy.rect.x
+            distY = enemy.ytarget - enemy.rect.y
+            #target = 
+            
+
+            #if the dist is bigger than the moveSpeed
+            #if it is smaller. Set the pos = the target
+            #if lean is pos
+                #move the moveSpeed on X and the moveSpeed * lean on Y
+            #if lean is neg
+                #move the-moveSpeed on X and the moveSpood * lean on Y
+            
+
+        
+        
+
+       
+
 
 
 
@@ -177,6 +233,8 @@ font = pygame.font.Font(None, 30)
 asteroid_list = pygame.sprite.Group()
 # Group to hold missiles
 missile_list = pygame.sprite.Group()
+#Group to hold the enemys
+enemy_list = pygame.sprite.Group()
 # This is a list of every sprite. All blocks and the player block as well.
 # Having an extra group for all sprites makes it far easier to draw them
 # all onto the screen.  In fact it's done by a single line of code(line 122)
@@ -274,6 +332,8 @@ while not done:
             bg.scoreBoard()
         if time % spawnrate == 0:
             spawner.asteroids()
+        if time % enemy_spawnrate == 0:
+            spawner.enemys()
 
     if pygame.sprite.groupcollide(missile_list, asteroid_list, True, True):
         score += 10

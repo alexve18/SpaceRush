@@ -7,7 +7,7 @@ time = 0
 speed = 1
 score = 0
 spawnrate = 200
-enemy_spawnrate = 100
+grayship_spawnrate = 100
 Invulnerablecounter = 0
 life = 3
 player_speed = 6
@@ -27,7 +27,7 @@ player_imagelight = pygame.image.load('images/spaceship2.png')
 life_image = pygame.transform.scale(player_image, (20, 20))
 asteroid_image = pygame.image.load('images/asteroid.png')
 missile_image = pygame.image.load('images/missile.png')
-enemy_image = pygame.image.load('images/spaceship1.png')
+grayship_image = pygame.image.load('images/spaceship1.png')
 
 
 # -------------------------------------
@@ -53,19 +53,19 @@ class Missile(pygame.sprite.Sprite):
         self.image = missile_image
         self.rect = self.image.get_rect()
 
-class Enemy(pygame.sprite.Sprite):
+class GrayShip(pygame.sprite.Sprite):
     xpos = 0                                # defines the x spawn position
     ypos = 0                                # defines the y spaw position
-    xtarget = 0                             # defines the x target position(the position the enemy is moving to)
+    xtarget = 0                             # defines the x target position(the position the grayship is moving to)
     ytarget = 0                             # defines the y target position
                         # defines how many moves it will take to get to the target
     fireRate = random.randrange(500,750)    # defines the space between fireing, lower number = more rapid fire
-    moveSpeed = random.randrange(5)         # defines how many pixles the enemy moves per update
-    onTarget = False                        # defines if the enemy is on target
+    moveSpeed = random.randrange(5)         # defines how many pixles the grayship moves per update
+    onTarget = False                        # defines if the grayship is on target
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = enemy_image
+        self.image = grayship_image
         self.rect = self.image.get_rect()
 
 
@@ -121,28 +121,28 @@ class Spawn:
             asteroid_list.add(asteroid)
             all_sprites_list.add(asteroid)
 
-    def enemys(self):
-        #defines the enemy
-        enemy = Enemy()
+    def Grayship(self):
+        #defines the grayship
+        grayship = GrayShip()
 
-        #defines the enemy position
-        enemy.rect.x = random.randrange(550)
-        enemy.rect.y = random.randrange(100)
+        #defines the grayship position
+        grayship.rect.x = random.randrange(550)
+        grayship.rect.y = random.randrange(100)
 
-        def findTarget(self): #defines the enemy target
-            enemy.xtarget = random.randrange(550)
-            enemy.ytarget = random.randrange(300)
+        def findTarget(self): #defines the grayship target
+            grayship.xtarget = random.randrange(550)
+            grayship.ytarget = random.randrange(300)
 
 
-        if enemy.onTarget == True:
+        if grayship.onTarget == True:
             findTarget()
-            enemy.onTarget = False
+            grayship.onTarget = False
         
-        enemy_list.add(enemy)
-        all_sprites_list.add(enemy)
+        grayship_list.add(grayship)
+        all_sprites_list.add(grayship)
         def move(self):
-            distX = enemy.xtarget - enemy.rect.x
-            distY = enemy.ytarget - enemy.rect.y
+            distX = grayship.xtarget - grayship.rect.x
+            distY = grayship.ytarget - grayship.rect.y
             #target = 
             
 
@@ -152,14 +152,6 @@ class Spawn:
                 #move the moveSpeed on X and the moveSpeed * lean on Y
             #if lean is neg
                 #move the-moveSpeed on X and the moveSpood * lean on Y
-            
-
-        
-        
-
-       
-
-
 
 
 class Uprades:
@@ -233,8 +225,8 @@ font = pygame.font.Font(None, 30)
 asteroid_list = pygame.sprite.Group()
 # Group to hold missiles
 missile_list = pygame.sprite.Group()
-#Group to hold the enemys
-enemy_list = pygame.sprite.Group()
+#Group to hold the grayships
+grayship_list = pygame.sprite.Group()
 # This is a list of every sprite. All blocks and the player block as well.
 # Having an extra group for all sprites makes it far easier to draw them
 # all onto the screen.  In fact it's done by a single line of code(line 122)
@@ -332,8 +324,8 @@ while not done:
             bg.scoreBoard()
         if time % spawnrate == 0:
             spawner.asteroids()
-        if time % enemy_spawnrate == 0:
-            spawner.enemys()
+        if time % grayship_spawnrate == 0:
+            spawner.Grayship()
 
     if pygame.sprite.groupcollide(missile_list, asteroid_list, True, True):
         score += 10
@@ -350,7 +342,7 @@ while not done:
                 Invulnerablecounter = 0
 
 
-    # Missiles move at a constant speed up the screen, towards the enemy
+    # Missiles move at a constant speed up the screen, towards the grayship
     for shot in missile_list:
         shot.rect.y -= 5
         if shot.rect.y == 0:

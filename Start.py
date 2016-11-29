@@ -340,6 +340,9 @@ while not done:
                 print('Collided')
                 Invulnerable = True
                 Invulnerablecounter = 0
+    if pygame.sprite.groupcollide(missile_list, grayship_list, True, True):
+        score += 20
+        bg.scoreBoard()
 
 
     # Missiles move at a constant speed up the screen, towards the grayship
@@ -355,6 +358,17 @@ while not done:
         if comic.rect.y == 400:
             asteroid_list.remove(comic)
             all_sprites_list.remove(comic)
+
+    for ship in grayship_list:
+        if ship.rect.x > 520:
+            ship.rect.x -= random.randint(1, 20)
+        elif ship.rect.x < 10:
+            ship.rect.x += random.randint(1, 20)
+        else:
+            ship.rect.x += random.randint(-50, 50)
+        if ship.rect.y == 400:
+            grayship_list.remove(ship)
+            all_sprites_list.remove(ship)
 
     # Draw all the spites
     all_sprites_list.draw(screen)

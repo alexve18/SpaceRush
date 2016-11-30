@@ -2,6 +2,7 @@ import pygame
 import random
 
 
+
 # -----------Variables-----------------
 time = 0
 speed = 1
@@ -27,8 +28,6 @@ fontObj = pygame.font.Font(font_path, font_size)
 
 # ----------Image Loader---------------
 player_image = pygame.image.load('images/spaceship.png')
-player_imagedark = pygame.image.load('images/spaceship1.png')
-player_imagelight = pygame.image.load('images/spaceship2.png')
 life_image = pygame.transform.scale(player_image, (20, 20))
 asteroid_image = pygame.image.load('images/asteroid.png')
 missile_image = pygame.image.load('images/missile.png')
@@ -288,6 +287,8 @@ clock = pygame.time.Clock()
 #-------------Opening Screen --------------
 while not Start:
     for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 Start = True
@@ -310,19 +311,6 @@ while not Stop:
                     upgrade.tripleShot()
                 else:
                     upgrade.basic()
-            if event.key == pygame.K_b:
-                spawner.asteroids()
-            if event.key == pygame.K_d:
-                if not Tripleshot:
-                    Dualshot = True
-            if event.key == pygame.K_t:
-                if Dualshot:
-                    Tripleshot = True
-                    Dualshot = False
-                else:
-                    Tripleshot = True
-            if event.key == pygame.K_s:
-                speed += 1
 
 
     key = pygame.key.get_pressed()
@@ -358,6 +346,13 @@ while not Stop:
             spawner.asteroids()
         if time % grayship_spawnrate == 0:
             spawner.Grayship()
+        if score > 1500:
+            Dualshot = True
+            speed = 3
+        if score > 3000:
+            Tripleshot = True
+            Dualshot = False
+            speed = 5
 
     if pygame.sprite.groupcollide(missile_list, asteroid_list, True, True):
         score += 10
@@ -410,6 +405,7 @@ while not Stop:
     pygame.display.flip()
 
 while Stop:
+    speed = 1
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             Stop = False

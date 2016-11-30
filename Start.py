@@ -13,12 +13,17 @@ life = 3
 player_speed = 6
 Invulnerable = False
 Stop = False
+Start = False
 WHITE = (255, 255, 255)
 DARK_GREY = (50, 50, 50)
 
 SCREEN_WIDTH = 750
 SCREEN_HEIGHT = 400
-# -------------------------------------
+# ------------- Font ------------
+pygame.font.init()
+font_path = "fonts/Titlefont.otf"
+font_size = 64
+fontObj = pygame.font.Font(font_path, font_size)
 
 # ----------Image Loader---------------
 player_image = pygame.image.load('images/spaceship.png')
@@ -92,6 +97,25 @@ class Background:
             y = -h
         if y1 > h:
             y1 = -h
+
+    def openingscreen(self):
+        global fontObj
+        Title = fontObj.render("Space Rush", 1, (8, 255, 0))
+        help = font.render("Use arrows keys to move and Spacebar to shoot", 1, (8, 255, 0))
+        startext = font.render("Press Spacebar to Start", 1, (8, 255, 0))
+        pygame.Surface.blit(screen, Title, (120, 100))
+        pygame.Surface.blit(screen, help, (60, 250))
+        pygame.Surface.blit(screen, startext, (180, 300))
+
+    def endscreen(self):
+        global fontObj, score
+        Title = fontObj.render("Game Over", 1, (8, 255, 0))
+        endscoretext = str("You finished with " + str(score) + " Score")
+        endscore = font.render(endscoretext, 1, (8, 255, 0))
+        credit = font.render("This game was made by Alexander and Pall", 1, (8, 255, 0))
+        pygame.Surface.blit(screen, Title, (110, 100))
+        pygame.Surface.blit(screen, endscore, (150, 250))
+        pygame.Surface.blit(screen, credit, (80, 300))
 
     def scoreBoard(self):
         global score, life
@@ -261,23 +285,31 @@ done = False
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
+#-------------Opening Screen --------------
+while not Start:
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                Start = True
+    bg.scroll()
+    bg.openingscreen()
+    pygame.display.flip()
 # -------- Main Program Loop -----------
 # We need to check out what happens when the player hits the space bar in order to "shoot".
 # A new missile is created and gets it's initial position in the "middle" of the player.
 # Then this missile is added to the missile sprite-group and also to the all_sprites group.
-while not done:
+while not Stop:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            done = True
+            pygame.quit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                if not Stop:
-                    if Dualshot:
-                        upgrade.dualShot()
-                    elif Tripleshot:
-                        upgrade.tripleShot()
-                    else:
-                        upgrade.basic()
+                if Dualshot:
+                    upgrade.dualShot()
+                elif Tripleshot:
+                    upgrade.tripleShot()
+                else:
+                    upgrade.basic()
             if event.key == pygame.K_b:
                 spawner.asteroids()
             if event.key == pygame.K_d:
@@ -376,4 +408,16 @@ while not done:
     clock.tick(60)
     # Go ahead and update the screen with what we've drawn.
     pygame.display.flip()
+
+while Stop:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            Stop = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                Start = True
+    bg.scroll()
+    bg.endscreen()
+    pygame.display.flip()
+
 pygame.quit()

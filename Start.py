@@ -133,7 +133,7 @@ class Background:
     def TopScorers(self):
         scorers = conn.Display()
         drawnumber = 90
-        pygame.draw.rect(screen, (0, 0, 0), (590, 90, 150, 270))
+        pygame.draw.rect(screen, (0,0,0), (590, 90, 150, 300))
         for x in range(len(scorers)):
             text = str(x + 1) + ". " + scorers[x]
             scorer = font.render(text, 1, (8, 255, 0))
@@ -143,7 +143,7 @@ class Background:
 
 class Spawn:
     def asteroids(self):
-        for i in range(30 + score % 100):
+        for i in range(30 + score / 100):
             asteroid = Asteroid()
             # Set a random location for the new asteroid.
             # All the asteroids are within the left / right boundaries of the screen
@@ -359,7 +359,7 @@ class Game:
                 elif ship.rect.x < 10:
                     ship.rect.x += random.randint(1, 20)
                 else:
-                    ship.rect.x += random.randint(-50, 50)
+                    ship.rect.x += random.randint(-30, 30)
                 if ship.rect.y == 400:
                     grayship_list.remove(ship)
                     all_sprites_list.remove(ship)
@@ -380,7 +380,7 @@ class Game:
                     Stop = False
                     pygame.quit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
+                    if event.key == pygame.K_RETURN:
                         game.StartScreen()
             bg.scroll()
             bg.endscreen()

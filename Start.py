@@ -1,7 +1,6 @@
 import pygame
 import random
-
-
+from Connection import connection
 
 # -----------Variables-----------------
 time = 0
@@ -12,6 +11,7 @@ grayship_spawnrate = 100
 Invulnerablecounter = 0
 life = 3
 player_speed = 6
+playername = 'Default'
 Invulnerable = False
 Stop = False
 Start = False
@@ -28,7 +28,7 @@ fontObj = pygame.font.Font(font_path, font_size)
 
 # ----------Image Loader---------------
 player_image = pygame.image.load('images/spaceship.png')
-life_image = pygame.transform.scale(player_image, (20, 20))
+life_image = pygame.transform.scale(player_image, (25, 25))
 asteroid_image = pygame.image.load('images/asteroid.png')
 missile_image = pygame.image.load('images/missile.png')
 grayship_image = pygame.image.load('images/spaceship1.png')
@@ -57,15 +57,16 @@ class Missile(pygame.sprite.Sprite):
         self.image = missile_image
         self.rect = self.image.get_rect()
 
+
 class GrayShip(pygame.sprite.Sprite):
-    xpos = 0                                # defines the x spawn position
-    ypos = 0                                # defines the y spaw position
-    xtarget = 0                             # defines the x target position(the position the grayship is moving to)
-    ytarget = 0                             # defines the y target position
-                        # defines how many moves it will take to get to the target
-    fireRate = random.randrange(500,750)    # defines the space between fireing, lower number = more rapid fire
-    moveSpeed = random.randrange(5)         # defines how many pixles the grayship moves per update
-    onTarget = False                        # defines if the grayship is on target
+    xpos = 0  # defines the x spawn position
+    ypos = 0  # defines the y spaw position
+    xtarget = 0  # defines the x target position(the position the grayship is moving to)
+    ytarget = 0  # defines the y target position
+    # defines how many moves it will take to get to the target
+    fireRate = random.randrange(500, 750)  # defines the space between fireing, lower number = more rapid fire
+    moveSpeed = random.randrange(5)  # defines how many pixles the grayship moves per update
+    onTarget = False  # defines if the grayship is on target
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -127,12 +128,22 @@ class Background:
         pygame.draw.rect(screen, (0, 0, 0), (590, 40, 150, 50))
         pygame.Surface.blit(screen, lifetext, (590, 40))
         for x in range(life):
-            pygame.Surface.blit(screen, life_image, ((580 + (x * 25 + 10)), 70))
+            pygame.Surface.blit(screen, life_image, ((580 + (x * 35 + 10)), 60))
+
+    def TopScorers(self):
+        scorers = conn.Display()
+        drawnumber = 90
+        pygame.draw.rect(screen, (0, 0, 0), (590, 90, 150, 270))
+        for x in range(len(scorers)):
+            text = str(x + 1) + ". " + scorers[x]
+            scorer = font.render(text, 1, (8, 255, 0))
+            pygame.Surface.blit(screen, scorer, (590, drawnumber))
+            drawnumber += 30
 
 
 class Spawn:
     def asteroids(self):
-        for i in range(30):
+        for i in range(30 + score % 100):
             asteroid = Asteroid()
             # Set a random location for the new asteroid.
             # All the asteroids are within the left / right boundaries of the screen
@@ -145,36 +156,36 @@ class Spawn:
             all_sprites_list.add(asteroid)
 
     def Grayship(self):
-        #defines the grayship
+        # defines the grayship
         grayship = GrayShip()
 
-        #defines the grayship position
+        # defines the grayship position
         grayship.rect.x = random.randrange(550)
         grayship.rect.y = random.randrange(100)
 
-        def findTarget(self): #defines the grayship target
+        def findTarget(self):  # defines the grayship target
             grayship.xtarget = random.randrange(550)
             grayship.ytarget = random.randrange(300)
-
 
         if grayship.onTarget == True:
             findTarget()
             grayship.onTarget = False
-        
+
         grayship_list.add(grayship)
         all_sprites_list.add(grayship)
+
         def move(self):
             distX = grayship.xtarget - grayship.rect.x
             distY = grayship.ytarget - grayship.rect.y
-            #target = 
-            
+            # target =
 
-            #if the dist is bigger than the moveSpeed
-            #if it is smaller. Set the pos = the target
-            #if lean is pos
-                #move the moveSpeed on X and the moveSpeed * lean on Y
-            #if lean is neg
-                #move the-moveSpeed on X and the moveSpood * lean on Y
+
+            # if the dist is bigger than the moveSpeed
+            # if it is smaller. Set the pos = the target
+            # if lean is pos
+            # move the moveSpeed on X and the moveSpeed * lean on Y
+            # if lean is neg
+            # move the-moveSpeed on X and the moveSpood * lean on Y
 
 
 class Uprades:
@@ -214,14 +225,19 @@ class Uprades:
         missile_list.add(shot3)
         all_sprites_list.add(shot3)
 
+
 class Game:
-    def End(self):
-        global Stop
+    def gameover(self):
+        global Stop, score
         print("You Lost")
         missile_list.empty()
         asteroid_list.empty()
         all_sprites_list.empty()
         Stop = True
+        conn.newScorer(playername, score)
+        bg.TopScorers()
+        game.EndScreen()
+
     def Hit(self):
         global Invulnerablecounter, Invulnerable
         if time % 3 == 0:
@@ -234,6 +250,156 @@ class Game:
                 Invulnerablecounter += 1
                 all_sprites_list.add(player)
 
+    def StartScreen(self):
+        global Start
+        game.Init()
+        bg.TopScorers()
+        while not Start:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        Start = True
+                        game.GameScreen()
+            bg.scroll()
+            bg.openingscreen()
+            pygame.display.flip()
+
+    def GameScreen(self):
+        global speed, score, life, time, Dualshot, Tripleshot, Invulnerable, Invulnerablecounter, Stop
+        while not Stop:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        if Dualshot:
+                            upgrade.dualShot()
+                        elif Tripleshot:
+                            upgrade.tripleShot()
+                        else:
+                            upgrade.basic()
+
+            key = pygame.key.get_pressed()
+            if key[pygame.K_LEFT]:
+                if player.rect.x < 5:
+                    player.rect.x = 5
+                player.rect.x -= player_speed
+            if key[pygame.K_RIGHT]:
+                if player.rect.x > 540:
+                    player.rect.x = 540
+                player.rect.x += player_speed
+            if key[pygame.K_UP]:
+                if player.rect.y < 0:
+                    player.rect.y = 0
+                player.rect.y -= player_speed
+            if key[pygame.K_DOWN]:
+                if player.rect.y > 350:
+                    player.rect.y = 350
+                player.rect.y += player_speed
+
+            time += 1
+            if Invulnerable:
+                game.Hit()
+
+            if not Stop:
+                bg.scroll()
+
+            if not Stop:
+                if time % 10 == 0:
+                    score += 1
+                    bg.scoreBoard()
+                if time % spawnrate == 0:
+                    spawner.asteroids()
+                if time % grayship_spawnrate == 0:
+                    spawner.Grayship()
+                if score > 1500:
+                    Dualshot = True
+                    speed = 3
+                if score > 3000:
+                    Tripleshot = True
+                    Dualshot = False
+                    speed = 5
+
+            if pygame.sprite.groupcollide(missile_list, asteroid_list, True, True):
+                score += 10
+                bg.scoreBoard()
+            if pygame.sprite.spritecollide(player, asteroid_list, False):
+                if not Invulnerable:
+                    life -= 1
+                    bg.lifeBoard()
+                    if life == 0:
+                        game.gameover()
+                    else:
+                        print('Collided')
+                        Invulnerable = True
+                        Invulnerablecounter = 0
+            if pygame.sprite.groupcollide(missile_list, grayship_list, True, True):
+                score += 20
+                bg.scoreBoard()
+
+            # Missiles move at a constant speed up the screen, towards the grayship
+            for shot in missile_list:
+                shot.rect.y -= 5
+                if shot.rect.y == 0:
+                    missile_list.remove(shot)
+                    all_sprites_list.remove(shot)
+
+            # All the enemies move down the screen at a constant speed
+            for comic in asteroid_list:
+                comic.rect.y += speed + 1
+                if comic.rect.y == 400:
+                    asteroid_list.remove(comic)
+                    all_sprites_list.remove(comic)
+
+            for ship in grayship_list:
+                if ship.rect.x > 520:
+                    ship.rect.x -= random.randint(1, 20)
+                elif ship.rect.x < 10:
+                    ship.rect.x += random.randint(1, 20)
+                else:
+                    ship.rect.x += random.randint(-50, 50)
+                if ship.rect.y == 400:
+                    grayship_list.remove(ship)
+                    all_sprites_list.remove(ship)
+
+            # Draw all the spites
+            all_sprites_list.draw(screen)
+            # Limit to 60 frames per second
+            clock.tick(60)
+            # Go ahead and update the screen with what we've drawn.
+            pygame.display.flip()
+
+    def EndScreen(self):
+        global speed, Start, Stop
+        while Stop:
+            speed = 1
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    Stop = False
+                    pygame.quit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        game.StartScreen()
+            bg.scroll()
+            bg.endscreen()
+            pygame.display.flip()
+    def Init(self):
+        global speed, Start, Stop, score, life, Dualshot, Tripleshot
+
+        Stop = False
+        Start = False
+        Dualshot = False
+        Tripleshot = False
+        speed = 1
+        score = 0
+        life = 3
+        player.rect.x = 320
+        player.rect.y = 350
+        all_sprites_list.add(player)
+        bg.lifeBoard()
+        bg.scoreBoard()
 
 
 # ---------------------------------------------
@@ -248,7 +414,7 @@ font = pygame.font.Font(None, 30)
 asteroid_list = pygame.sprite.Group()
 # Group to hold missiles
 missile_list = pygame.sprite.Group()
-#Group to hold the grayships
+# Group to hold the grayships
 grayship_list = pygame.sprite.Group()
 # This is a list of every sprite. All blocks and the player block as well.
 # Having an extra group for all sprites makes it far easier to draw them
@@ -257,163 +423,28 @@ all_sprites_list = pygame.sprite.Group()
 
 # Create a player block
 player = Player()
-player.rect.x = 320
-player.rect.y = 350
-
-all_sprites_list.add(player)
-
 # Creates the background
 bg = Background()
 bg.create()
-bg.scoreBoard()
-bg.lifeBoard()
-
 # Spawns enemies
 spawner = Spawn()
 spawner.asteroids()
-
 # Upgrades
 upgrade = Uprades()
-Dualshot = False
-Tripleshot = False
-
 # Loop until the user clicks the close button.
 game = Game()
-done = False
-
+# The Database connection
+conn = connection()
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
-#-------------Opening Screen --------------
-while not Start:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                Start = True
-    bg.scroll()
-    bg.openingscreen()
-    pygame.display.flip()
+# -------------Opening Screen --------------
+while len(playername) > 4:
+    playername = raw_input('Type your name here to start the game (only 4 letters): ')
+game.StartScreen()
 # -------- Main Program Loop -----------
 # We need to check out what happens when the player hits the space bar in order to "shoot".
 # A new missile is created and gets it's initial position in the "middle" of the player.
 # Then this missile is added to the missile sprite-group and also to the all_sprites group.
-while not Stop:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                if Dualshot:
-                    upgrade.dualShot()
-                elif Tripleshot:
-                    upgrade.tripleShot()
-                else:
-                    upgrade.basic()
-
-
-    key = pygame.key.get_pressed()
-    if key[pygame.K_LEFT]:
-        if player.rect.x < 5:
-            player.rect.x = 5
-        player.rect.x -= player_speed
-    if key[pygame.K_RIGHT]:
-        if player.rect.x > 540:
-            player.rect.x = 540
-        player.rect.x += player_speed
-    if key[pygame.K_UP]:
-        if player.rect.y < 0:
-            player.rect.y = 0
-        player.rect.y -= player_speed
-    if key[pygame.K_DOWN]:
-        if player.rect.y > 350:
-            player.rect.y = 350
-        player.rect.y += player_speed
-
-    time += 1
-    if Invulnerable:
-        game.Hit()
-
-    if not Stop:
-        bg.scroll()
-
-    if not Stop:
-        if time % 10 == 0:
-            score += 1
-            bg.scoreBoard()
-        if time % spawnrate == 0:
-            spawner.asteroids()
-        if time % grayship_spawnrate == 0:
-            spawner.Grayship()
-        if score > 1500:
-            Dualshot = True
-            speed = 3
-        if score > 3000:
-            Tripleshot = True
-            Dualshot = False
-            speed = 5
-
-    if pygame.sprite.groupcollide(missile_list, asteroid_list, True, True):
-        score += 10
-        bg.scoreBoard()
-    if pygame.sprite.spritecollide(player, asteroid_list, False):
-        if not Invulnerable:
-            life -= 1
-            bg.lifeBoard()
-            if life == 0:
-                game.End()
-            else:
-                print('Collided')
-                Invulnerable = True
-                Invulnerablecounter = 0
-    if pygame.sprite.groupcollide(missile_list, grayship_list, True, True):
-        score += 20
-        bg.scoreBoard()
-
-
-    # Missiles move at a constant speed up the screen, towards the grayship
-    for shot in missile_list:
-        shot.rect.y -= 5
-        if shot.rect.y == 0:
-            missile_list.remove(shot)
-            all_sprites_list.remove(shot)
-
-    # All the enemies move down the screen at a constant speed
-    for comic in asteroid_list:
-        comic.rect.y += speed + 1
-        if comic.rect.y == 400:
-            asteroid_list.remove(comic)
-            all_sprites_list.remove(comic)
-
-    for ship in grayship_list:
-        if ship.rect.x > 520:
-            ship.rect.x -= random.randint(1, 20)
-        elif ship.rect.x < 10:
-            ship.rect.x += random.randint(1, 20)
-        else:
-            ship.rect.x += random.randint(-50, 50)
-        if ship.rect.y == 400:
-            grayship_list.remove(ship)
-            all_sprites_list.remove(ship)
-
-    # Draw all the spites
-    all_sprites_list.draw(screen)
-    # Limit to 60 frames per second
-    clock.tick(60)
-    # Go ahead and update the screen with what we've drawn.
-    pygame.display.flip()
-
-while Stop:
-    speed = 1
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            Stop = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                Start = True
-    bg.scroll()
-    bg.endscreen()
-    pygame.display.flip()
 
 pygame.quit()

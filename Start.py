@@ -24,7 +24,9 @@ SCREEN_HEIGHT = 400
 pygame.font.init()
 font_path = "fonts/Titlefont.otf"
 font_size = 64
+font_size2 = 41
 fontObj = pygame.font.Font(font_path, font_size)
+fontObj2 = pygame.font.Font(font_path, font_size2)
 
 # ----------Image Loader---------------
 player_image = pygame.image.load('images/spaceship.png')
@@ -116,6 +118,17 @@ class Background:
         pygame.Surface.blit(screen, Title, (110, 100))
         pygame.Surface.blit(screen, endscore, (150, 250))
         pygame.Surface.blit(screen, credit, (80, 300))
+
+    def ThankYou(self):
+        global fontObj2, score
+        Title = fontObj2.render("Takk fyrir Skolagonguna", 1, (8, 255, 0))
+        endtext = str("Thar sem thetta er sidasta verkefni")
+        end2text = str("Sem eg geri i Taekniskolanum")
+        endscreen = font.render(endtext, 1, (8, 255, 0))
+        end2screen = font.render(end2text, 1, (8, 255, 0))
+        pygame.Surface.blit(screen, Title, (0, 100))
+        pygame.Surface.blit(screen, endscreen, (100, 250))
+        pygame.Surface.blit(screen, end2screen, (100, 300))
 
     def scoreBoard(self):
         global score, life
@@ -262,8 +275,24 @@ class Game:
                     if event.key == pygame.K_SPACE:
                         Start = True
                         game.GameScreen()
+                    if event.key == pygame.K_t:
+                        Start = True
+                        game.ThankScreen()
+
             bg.scroll()
             bg.openingscreen()
+            pygame.display.flip()
+
+    def ThankScreen(self):
+        global Start
+        game.Init()
+        bg.TopScorers()
+        while not Stop:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+            bg.scroll()
+            bg.ThankYou()
             pygame.display.flip()
 
     def GameScreen(self):

@@ -41,3 +41,4 @@ class connection:
         return result
 
 conn = connection()
+conn.CheckConnection()

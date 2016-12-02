@@ -124,11 +124,14 @@ class Background:
         Title = fontObj2.render("Takk fyrir Skolagonguna", 1, (8, 255, 0))
         endtext = str("Thar sem thetta er sidasta verkefni")
         end2text = str("Sem eg geri i Taekniskolanum")
+        end3text = str("Kvedja Alexander")
         endscreen = font.render(endtext, 1, (8, 255, 0))
         end2screen = font.render(end2text, 1, (8, 255, 0))
+        end3screen = font.render(end3text, 1, (8, 255, 0))
         pygame.Surface.blit(screen, Title, (0, 100))
-        pygame.Surface.blit(screen, endscreen, (100, 250))
-        pygame.Surface.blit(screen, end2screen, (100, 300))
+        pygame.Surface.blit(screen, endscreen, (100, 200))
+        pygame.Surface.blit(screen, end2screen, (100, 225))
+        pygame.Surface.blit(screen, end3screen, (100, 250))
 
     def scoreBoard(self):
         global score, life

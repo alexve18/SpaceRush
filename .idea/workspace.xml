@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="32edcca8-f145-4a9c-83c1-79ae8e79f69d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Connection.py" afterPath="$PROJECT_DIR$/Connection.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Start.py" afterPath="$PROJECT_DIR$/Start.py" />
     </list>
     <ignored path="Lokaverk.iws" />
@@ -23,7 +22,7 @@
     <SUITE FILE_PATH="coverage/SpaceRush$Opening_Screen.coverage" NAME="Opening Screen Coverage Results" MODIFIED="1480512540385" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/SpaceRush$Connection.coverage" NAME="Connection Coverage Results" MODIFIED="1480685011774" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/SpaceRush$Pathfinding_Enemy.coverage" NAME="Pathfinding_Enemy Coverage Results" MODIFIED="1480514439539" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/SpaceRush$Start.coverage" NAME="Start Coverage Results" MODIFIED="1480689924766" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SpaceRush$Start.coverage" NAME="Start Coverage Results" MODIFIED="1480690353548" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Lokaverk$BackgroundScroller2.coverage" NAME="BackgroundScroller2 Coverage Results" MODIFIED="1479292157408" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Lokaverk$Spritetest.coverage" NAME="Spritetest Coverage Results" MODIFIED="1479220479800" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Lokaverk$test.coverage" NAME="test Coverage Results" MODIFIED="1479308163048" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -44,8 +43,8 @@
       <file leaf-file-name="Start.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Start.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="186">
-              <caret line="314" column="16" selection-start-line="314" selection-start-column="16" selection-end-line="314" selection-end-column="16" />
+            <state relative-caret-position="345">
+              <caret line="131" column="58" selection-start-line="131" selection-start-column="58" selection-end-line="131" selection-end-column="58" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -150,6 +149,7 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -184,7 +184,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -754,8 +753,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Start.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="314" column="16" selection-start-line="314" selection-start-column="16" selection-end-line="314" selection-end-column="16" />
+        <state relative-caret-position="345">
+          <caret line="131" column="58" selection-start-line="131" selection-start-column="58" selection-end-line="131" selection-end-column="58" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>

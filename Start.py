@@ -232,7 +232,9 @@ class Game:
         global Stop, score
         print("You Lost")
         missile_list.empty()
+        enemy_missle_list.empty()
         asteroid_list.empty()
+        enemy_list.empty()
         all_sprites_list.empty()
         Stop = True
         conn.newScorer(playername, score)
@@ -352,6 +354,16 @@ class Game:
                         print('Collided')
                         Invulnerable = True
                         Invulnerablecounter = 0
+            if pygame.sprite.spritecollide(player, enemy_missle_list, False):
+                if not Invulnerable:
+                    life -= 1
+                    bg.lifeBoard()
+                    if life == 0:
+                        game.gameover()
+                    else:
+                        print('Collided')
+                        Invulnerable = True
+                        Invulnerablecounter = 0
             if pygame.sprite.groupcollide(missile_list, grayship_list, True, True):
                 score += 20
                 bg.scoreBoard()
@@ -361,6 +373,13 @@ class Game:
                 shot.rect.y -= 5
                 if shot.rect.y == 0:
                     missile_list.remove(shot)
+                    all_sprites_list.remove(shot)
+
+            # Enemy Missles
+            for shot in enemy_missle_list:
+                shot.rect.y += 5
+                if shot.rect.y == 350:
+                    enemy_missle_list.remove(shot)
                     all_sprites_list.remove(shot)
 
             # All the enemies move down the screen at a constant speed
@@ -405,7 +424,6 @@ class Game:
                     ypos = ytarget
                     ymove = 0
                 if dist <= moveSpeed:
-                    print("new")
                     xpos = xtarget
                     ypos = ytarget
                     xtarget = random.randrange(40,510)
@@ -423,7 +441,13 @@ class Game:
                 hostile.rect.x = xpos
                 hostile.rect.y = ypos
                 hostile.xtarget = xtarget
-                hostile.ytarget = ytarget  
+                hostile.ytarget = ytarget
+                if time % 40 == 0:
+                    enemyshot = Missile()
+                    enemyshot.rect.x = hostile.rect.x + 18
+                    enemyshot.rect.y = hostile.rect.y + 30
+                    enemy_missle_list.add(enemyshot)
+                    all_sprites_list.add(enemyshot)
 
             # Draw all the spites
             all_sprites_list.draw(screen)
@@ -479,6 +503,8 @@ missile_list = pygame.sprite.Group()
 grayship_list = pygame.sprite.Group()
 # Group to hold all enemys
 enemy_list = pygame.sprite.Group()
+
+enemy_missle_list = pygame.sprite.Group()
 # This is a list of every sprite. All blocks and the player block as well.
 # Having an extra group for all sprites makes it far easier to draw them
 # all onto the screen.  In fact it's done by a single line of code(line 122)

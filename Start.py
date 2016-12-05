@@ -1,4 +1,5 @@
 import pygame
+import math
 import random
 from Connection import connection
 
@@ -61,19 +62,16 @@ class Missile(pygame.sprite.Sprite):
 
 
 class GrayShip(pygame.sprite.Sprite):
-    xpos = 0  # defines the x spawn position
-    ypos = 0  # defines the y spaw position
-    xtarget = 0  # defines the x target position(the position the grayship is moving to)
-    ytarget = 0  # defines the y target position
-    # defines how many moves it will take to get to the target
-    fireRate = random.randrange(500, 750)  # defines the space between fireing, lower number = more rapid fire
-    moveSpeed = random.randrange(5)  # defines how many pixles the grayship moves per update
-    onTarget = False  # defines if the grayship is on target
-
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = grayship_image
         self.rect = self.image.get_rect()
+    
+    xtarget = 0 # defines the x target position(the position the grayship is moving to)
+    ytarget = 0  # defines the y target position
+    # defines how many moves it will take to get to the target
+    fireRate = 0  # defines the space between fireing, lower number = more rapid fire
+    moveSpeed = 0  # defines how many pixles the grayship moves per update
 
 
 class Background:
@@ -176,32 +174,19 @@ class Spawn:
         grayship = GrayShip()
 
         # defines the grayship position
-        grayship.rect.x = random.randrange(550)
-        grayship.rect.y = random.randrange(100)
+        grayship.rect.x = random.randrange(40,510)
+        grayship.rect.y = random.randrange(40,160)
 
-        def findTarget(self):  # defines the grayship target
-            grayship.xtarget = random.randrange(550)
-            grayship.ytarget = random.randrange(300)
+        grayship.xtarget = random.randrange(40,510)
+        grayship.ytarget = random.randrange(40,160)
 
-        if grayship.onTarget == True:
-            findTarget()
-            grayship.onTarget = False
+        grayship.fireRate = random.randrange(1,5)
 
+        grayship.moveSpeed = random.randrange(1,3)
+
+        all_sprites_list.add(grayship) #not in all sprites due to the fact they move differently
+        enemy_list.add(grayship)
         grayship_list.add(grayship)
-        all_sprites_list.add(grayship)
-
-        def move(self):
-            distX = grayship.xtarget - grayship.rect.x
-            distY = grayship.ytarget - grayship.rect.y
-            # target =
-
-
-            # if the dist is bigger than the moveSpeed
-            # if it is smaller. Set the pos = the target
-            # if lean is pos
-            # move the moveSpeed on X and the moveSpeed * lean on Y
-            # if lean is neg
-            # move the-moveSpeed on X and the moveSpood * lean on Y
 
 
 class Uprades:
@@ -385,7 +370,7 @@ class Game:
                     asteroid_list.remove(comic)
                     all_sprites_list.remove(comic)
 
-            for ship in grayship_list:
+            """for ship in grayship_list:
                 if ship.rect.x > 520:
                     ship.rect.x -= random.randint(1, 20)
                 elif ship.rect.x < 10:
@@ -394,7 +379,51 @@ class Game:
                     ship.rect.x += random.randint(-30, 30)
                 if ship.rect.y == 400:
                     grayship_list.remove(ship)
-                    all_sprites_list.remove(ship)
+                    all_sprites_list.remove(ship)"""
+
+            for hostile in enemy_list:
+                xpos = hostile.rect.x
+                ypos = hostile.rect.y
+                    
+                xtarget = hostile.xtarget
+                ytarget = hostile.ytarget
+
+                moveSpeed = hostile.moveSpeed
+
+                xdist = abs(xtarget - xpos)
+                ydist = abs(ytarget - ypos)
+
+
+                dist = int(math.sqrt(xdist**2 + ydist**2))
+                if ydist == 0 or xdist == 0:
+                    pass
+                else:
+                    ymove = int(ydist/xdist)
+                if ymove > 3:
+                    ymove = 3
+                if ydist < moveSpeed:
+                    ypos = ytarget
+                    ymove = 0
+                if dist <= moveSpeed:
+                    print("new")
+                    xpos = xtarget
+                    ypos = ytarget
+                    xtarget = random.randrange(40,510)
+                    ytarget = random.randint(40,160)
+                else:
+                    if xtarget > xpos:
+                        xpos = xpos + moveSpeed
+                    elif xpos > xtarget:
+                        xpos = xpos - moveSpeed
+                    if ytarget > ypos:
+                        ypos = ypos + ymove
+                    elif ypos > ytarget:
+                        ypos = ypos - ymove
+
+                hostile.rect.x = xpos
+                hostile.rect.y = ypos
+                hostile.xtarget = xtarget
+                hostile.ytarget = ytarget  
 
             # Draw all the spites
             all_sprites_list.draw(screen)
@@ -448,6 +477,8 @@ asteroid_list = pygame.sprite.Group()
 missile_list = pygame.sprite.Group()
 # Group to hold the grayships
 grayship_list = pygame.sprite.Group()
+# Group to hold all enemys
+enemy_list = pygame.sprite.Group()
 # This is a list of every sprite. All blocks and the player block as well.
 # Having an extra group for all sprites makes it far easier to draw them
 # all onto the screen.  In fact it's done by a single line of code(line 122)

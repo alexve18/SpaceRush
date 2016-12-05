@@ -9,6 +9,7 @@ speed = 1
 score = 0
 spawnrate = 200
 grayship_spawnrate = 100
+firespeed = 60
 Invulnerablecounter = 0
 life = 3
 player_speed = 6
@@ -186,7 +187,6 @@ class Spawn:
 
         all_sprites_list.add(grayship) #not in all sprites due to the fact they move differently
         enemy_list.add(grayship)
-        grayship_list.add(grayship)
 
 
 class Uprades:
@@ -286,7 +286,7 @@ class Game:
             pygame.display.flip()
 
     def GameScreen(self):
-        global speed, score, life, time, Dualshot, Tripleshot, Invulnerable, Invulnerablecounter, Stop
+        global speed, score, life, time, Dualshot, Tripleshot, Invulnerable, Invulnerablecounter, Stop, grayship_spawnrate, firespeed
         while not Stop:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -340,6 +340,8 @@ class Game:
                     Tripleshot = True
                     Dualshot = False
                     speed = 5
+                    grayship_spawnrate = 50
+                    firespeed = 40
 
             if pygame.sprite.groupcollide(missile_list, asteroid_list, True, True):
                 score += 10
@@ -364,7 +366,7 @@ class Game:
                         print('Collided')
                         Invulnerable = True
                         Invulnerablecounter = 0
-            if pygame.sprite.groupcollide(missile_list, grayship_list, True, True):
+            if pygame.sprite.groupcollide(missile_list, enemy_list, True, True):
                 score += 20
                 bg.scoreBoard()
 
@@ -388,17 +390,6 @@ class Game:
                 if comic.rect.y == 400:
                     asteroid_list.remove(comic)
                     all_sprites_list.remove(comic)
-
-            """for ship in grayship_list:
-                if ship.rect.x > 520:
-                    ship.rect.x -= random.randint(1, 20)
-                elif ship.rect.x < 10:
-                    ship.rect.x += random.randint(1, 20)
-                else:
-                    ship.rect.x += random.randint(-30, 30)
-                if ship.rect.y == 400:
-                    grayship_list.remove(ship)
-                    all_sprites_list.remove(ship)"""
 
             for hostile in enemy_list:
                 xpos = hostile.rect.x
@@ -442,7 +433,7 @@ class Game:
                 hostile.rect.y = ypos
                 hostile.xtarget = xtarget
                 hostile.ytarget = ytarget
-                if time % 40 == 0:
+                if time % firespeed == 0:
                     enemyshot = Missile()
                     enemyshot.rect.x = hostile.rect.x + 18
                     enemyshot.rect.y = hostile.rect.y + 30
@@ -499,8 +490,6 @@ font = pygame.font.Font(None, 30)
 asteroid_list = pygame.sprite.Group()
 # Group to hold missiles
 missile_list = pygame.sprite.Group()
-# Group to hold the grayships
-grayship_list = pygame.sprite.Group()
 # Group to hold all enemys
 enemy_list = pygame.sprite.Group()
 

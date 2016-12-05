@@ -1,0 +1,34 @@
+Þetta verkefni var unnið í sameiningu af Alexander Guðmundssyni og Páll Guðbrandssyni. Verkenfið er tölvuleikur að nafni SpaceRush.
+Lekurinn er spilaður af einu leikmanni sem spilar sem geimskip. þú ferðast um geiminn og reynir að verða ekki í veg fyrir hlutunum
+sem ferðast á móti þér og getur þú komið í veg fyrir það með því að færa þig eða skjóta þig í gegn. Leikurinn verður erfiðari því
+fleirri stig sem þú nærð og reynir leikmaðurinn að ná sem flestum stigum áður enn hann glatar öllum 3 lífunum. Eftir að leikmaðurinn
+hefur tapað er honum sýnst lokastigin sín og ef hann hefur náð nógu góðu stigi kemst hann á topp 10 listann sem geymdur er í gagnagrunni.
+
+SpaceRush var unninn í Python og var notað Pygame til þess að kalla leikinn fram ásamt SQL connector for Python til að tala við gagnagrunninn.
+
+
+Bakgrunnur: Er mynd af geimnum sem við tökum tvö afrit af og látum renna í gegnum skjaínn og til skiptist þannig það lítur út eins og þú ferðast
+
+Geimskip: Er mynd sem tengt er við Sprite list, stjórnað með örvunum og skýtur skot með Bilstönginni
+
+Geimsteinarnir: Eru kallaðir í for loopu sem hækkar því lengra sem þú kemst. Birtast af handahófi á Y-ás
+
+Óvina Geimskipinin: Birtast af handahófi og ferðast eftir formúlu af Páll Guðbrandsyni
+
+Gagnagrunnurinn: Er hannaður og inniheldur eina töflu sem heldur utan um topp 10 leikmennina
+
+Procedures: Notum procedure sem um leið og 11 spilarinn birtist í gagnagrunninum finnur hann minnstu stigin og hendir þeim út og ef það er
+11 spilarinn þá hverfur hann bara um leið og hann kemur
+
+Missles: Eru skotin af spilaranum með bilstönginni. birtist eitt skot frá 0- 1500 stig enn þá bætist hraði í leikinn og í staðinn koma 2
+skot í einu og það sama gerist í 3000 stigum nema þá fær spilandi 3 skot í einu
+
+Upgrades: Tengjast hversu mikið stig leikmaðurinn er með 
+
+Life: Byrjar með 3 líf og missir leikmaðurinn eitt stig ef hann verður fyrir eitthverju
+
+Collision: Um leið og leikmaðurinn verður fyrir eitthverju triggerast Collision sem lætur spilarann vera ósigrandi í smá stund til að laga
+sig af áður enn hann byrjar aftur og er það sýnt með því að láta spilarann blikka
+
+-Alexander Guðmundsson
+-Páll Guðbrandsson

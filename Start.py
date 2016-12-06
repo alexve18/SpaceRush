@@ -9,7 +9,8 @@ speed = 1
 score = 0
 spawnrate = 200
 grayship_spawnrate = 100
-firespeed = 60
+firespeed_low = 100
+firespeed_high = 200
 Invulnerablecounter = 0
 life = 3
 player_speed = 6
@@ -171,6 +172,7 @@ class Spawn:
             all_sprites_list.add(asteroid)
 
     def Grayship(self):
+        global firespeed_low, firespeed_high
         # defines the grayship
         grayship = GrayShip()
 
@@ -181,7 +183,7 @@ class Spawn:
         grayship.xtarget = random.randrange(40,510)
         grayship.ytarget = random.randrange(40,160)
 
-        grayship.fireRate = random.randrange(100,200)
+        grayship.fireRate = random.randrange(firespeed_low,firespeed_high)
 
         grayship.moveSpeed = random.randrange(1,3)
 
@@ -286,7 +288,7 @@ class Game:
             pygame.display.flip()
 
     def GameScreen(self):
-        global speed, score, life, time, Dualshot, Tripleshot, Invulnerable, Invulnerablecounter, Stop, grayship_spawnrate, firespeed
+        global speed, score, life, time, Dualshot, Tripleshot, Invulnerable, Invulnerablecounter, Stop, grayship_spawnrate, firespeed_low, firespeed_high
         while not Stop:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -336,12 +338,15 @@ class Game:
                 if score > 1500:
                     Dualshot = True
                     speed = 3
+                    firespeed_low = 60
+                    firespeed_high = 80
                 if score > 3000:
                     Tripleshot = True
                     Dualshot = False
                     speed = 5
                     grayship_spawnrate = 50
-                    firespeed = 40
+                    firespeed_low = 40
+                    firespeed_high = 60
 
             if pygame.sprite.groupcollide(missile_list, asteroid_list, True, True):
                 score += 10

@@ -181,7 +181,7 @@ class Spawn:
         grayship.xtarget = random.randrange(40,510)
         grayship.ytarget = random.randrange(40,160)
 
-        grayship.fireRate = random.randrange(1,5)
+        grayship.fireRate = random.randrange(100,200)
 
         grayship.moveSpeed = random.randrange(1,3)
 
@@ -433,7 +433,7 @@ class Game:
                 hostile.rect.y = ypos
                 hostile.xtarget = xtarget
                 hostile.ytarget = ytarget
-                if time % firespeed == 0:
+                if time % hostile.fireRate == 0:
                     enemyshot = Missile()
                     enemyshot.rect.x = hostile.rect.x + 18
                     enemyshot.rect.y = hostile.rect.y + 30
